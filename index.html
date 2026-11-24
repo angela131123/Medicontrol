@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f8f6">
+  <title>MediControl</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="login-layout" id="login-view">
+    <div class="brand"><span class="brand-plus" aria-hidden="true">+</span>MediControl</div>
+
+    <div class="login-content">
+      <p class="eyebrow">Tu salud, día a día</p>
+      <h1>Tu tratamiento,<br>bajo control.</h1>
+      <p class="intro">Ingresa para consultar tus medicamentos y registrar cada toma.</p>
+
+      <form id="login-form">
+        <div class="form-field">
+          <label for="email">Correo electrónico</label>
+          <input id="email" name="email" type="email" placeholder="nombre@correo.com" autocomplete="username" required>
+        </div>
+        <div class="form-field">
+          <label for="password">Contraseña</label>
+          <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="off" required>
+        </div>
+        <button class="button primary" type="submit" disabled>Ingresar</button>
+        <p class="form-error" id="login-error" role="alert" hidden></p>
+      </form>
+
+      <p class="fine-print">Demostración. Usa datos ficticios. Los registros se guardan en este navegador.</p>
+      <noscript><p class="fine-print">Activa JavaScript para usar la demostración.</p></noscript>
+    </div>
+
+    <footer class="screen-footer">MediControl · Tu bienestar primero</footer>
+  </main>
+
+  <div class="app-layout" id="app-view" hidden>
+    <aside class="sidebar">
+      <div class="brand">MediControl</div>
+      <nav aria-label="Menú de paciente">
+        <button class="nav-button" type="button" data-view="home">Inicio</button>
+        <button class="nav-button" type="button" data-view="medicines">Medicamentos</button>
+        <button class="nav-button" type="button" data-view="reminders">Recordatorios</button>
+      </nav>
+      <button type="button" class="nav-button logout">Cerrar sesión</button>
+    </aside>
+
+    <main class="app-content">
+      <section class="screen" id="home" hidden>
+        <div class="app-bar">
+          <span class="brand">MediControl</span>
+          <span class="patient-tag">Paciente</span>
+        </div>
+        <header class="page-header">
+          <h1 tabindex="-1">Hola, <span id="patient-name"></span></h1>
+          <p class="intro">Vamos paso a paso con tu salud.</p>
+        </header>
+
+        <section class="hero" aria-labelledby="next-dose-title">
+          <h2 class="eyebrow" id="next-dose-title">Tu próxima toma</h2>
+          <time class="hero-time" data-next="time"></time>
+          <p class="hero-name" data-next="summary"></p>
+          <p class="details" data-next="details"></p>
+        </section>
+
+        <div class="shortcuts">
+          <button type="button" class="shortcut" data-view="medicines">
+            <span class="icon icon-pill" aria-hidden="true"></span>
+            <span><strong>Medicamentos</strong><span class="details">Consulta tu lista y registra una toma</span></span>
+            <span class="chevron chevron-next" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="shortcut" data-view="reminders">
+            <span class="icon icon-bell" aria-hidden="true"></span>
+            <span><strong>Recordatorios</strong><span class="details" data-next="alert"></span></span>
+          </button>
+        </div>
+        <p class="fine-print">Vista de paciente</p>
+
+        <footer class="screen-footer home-footer">
+          <button class="nav-button mobile-logout logout" type="button">Cerrar sesión</button>
+        </footer>
+      </section>
+
+      <section class="screen" id="medicines" hidden>
+        <header class="app-bar screen-heading">
+          <button type="button" class="back" data-view="home" aria-label="Volver al inicio"><span class="chevron" aria-hidden="true"></span></button>
+          <h1 tabindex="-1">Medicamentos</h1>
+        </header>
+        <div class="page-header">
+          <h2>Tu tratamiento de hoy</h2>
+          <p class="intro"><span id="medication-count"></span> medicamentos · Horario diario de ejemplo</p>
+        </div>
+        <p class="notice">Registra cada toma para llevar tu control.</p>
+        <div class="medicine-list" id="medicine-list"></div>
+        <footer class="screen-footer">Sigue siempre la pauta de tu profesional.</footer>
+      </section>
+
+      <section class="screen" id="dose" hidden>
+        <div class="app-bar screen-heading">
+          <button type="button" class="back" data-view="medicines" aria-label="Volver a medicamentos"><span class="chevron" aria-hidden="true"></span></button>
+          <p>Registrar toma</p>
+        </div>
+        <h1 class="question" tabindex="-1">¿Cómo fue tu toma?</h1>
+        <form id="dose-form">
+          <section class="card dose-card">
+            <p class="eyebrow">Medicamento</p>
+            <h2 data-dose="name"></h2>
+            <p class="dose-amount" data-dose="amount"></p>
+            <p class="details">Horario programado: <time data-dose="time"></time></p>
+          </section>
+          <fieldset>
+            <legend>Selecciona una opción</legend>
+            <label class="choice">
+              <input type="radio" name="status" value="done" required>
+              <span><strong>Realizada</strong><span class="details">Tomé mi medicamento</span></span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="status" value="omitted">
+              <span><strong>Omitida</strong><span class="details">No tomé esta dosis</span></span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="status" value="pending">
+              <span><strong>Pendiente</strong><span class="details">Aún no la he tomado</span></span>
+            </label>
+          </fieldset>
+          <p class="form-error" role="alert" hidden></p>
+          <button type="submit" class="button primary">Guardar</button>
+          <p class="fine-print">El registro corresponde a esta dosis.</p>
+        </form>
+        <footer class="screen-footer">Un paso más para cuidar de ti.</footer>
+      </section>
+
+      <section class="screen" id="saved" hidden>
+        <div class="app-bar"><span class="brand">MediControl</span></div>
+        <div class="result-icon" aria-hidden="true">✓</div>
+        <header class="page-header result-header">
+          <h1 tabindex="-1">Registro guardado</h1>
+          <p class="intro">Tu información se guardó correctamente en este navegador. Gracias por llevar tu control.</p>
+        </header>
+        <section class="card result-card">
+          <h2 data-dose="name"></h2>
+          <p class="details" data-dose="amount"></p>
+          <p class="details">Horario programado: <time data-dose="time"></time></p>
+          <div class="result-status"><span>Estado</span><strong data-dose="status"></strong></div>
+        </section>
+        <button type="button" class="button primary" data-view="medicines">Volver a medicamentos</button>
+        <footer class="screen-footer">Tu registro hace la diferencia.</footer>
+      </section>
+
+      <section class="screen" id="reminders" hidden>
+        <header class="app-bar screen-heading">
+          <button type="button" class="back" data-view="home" aria-label="Volver al inicio"><span class="chevron" aria-hidden="true"></span></button>
+          <h1 tabindex="-1">Recordatorios</h1>
+        </header>
+        <p class="page-header intro">Consulta el horario de tu próxima toma.</p>
+        <section class="hero" aria-labelledby="reminder-title">
+          <h2 class="eyebrow" id="reminder-title">Tu próxima toma</h2>
+          <time class="hero-time" data-next="time"></time>
+          <p class="hero-name" data-next="summary"></p>
+          <p class="details" data-next="details"></p>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <template id="medicine-template">
+    <article class="card medicine">
+      <div class="medicine-heading">
+        <h3></h3>
+        <time></time>
+      </div>
+      <p class="dose-amount"></p>
+      <p class="details medicine-status"></p>
+      <button type="button" class="button primary" data-view="dose"></button>
+    </article>
+  </template>
+</body>
+</html>
